@@ -9,12 +9,16 @@ import Register from "./components/auth/Register";
 import { Provider } from "react-redux";
 import store from "./store";
 import jwt_decode from "jwt-decode";
-import { setCurrentUser } from "./actions/authActions";
+import { logoutUser, setCurrentUser } from "./actions/authActions";
 import {useEffect} from 'react';
 import setAuthToken from "./utils/setAuthToken";
 
 
+
+
 function App() {
+
+  
 
   useEffect(() =>{
 
@@ -25,6 +29,17 @@ function App() {
       const decoded = jwt_decode(localStorage.jwtToken);
 
       store.dispatch(setCurrentUser(decoded));
+
+      const currentTime = Date.now() / 1000;
+
+      if(decoded.exp < currentTime){
+
+        store.dispatch(logoutUser());
+
+        //redirect to login page
+        window.location.href = "/login";
+
+      }
 
     }
 
