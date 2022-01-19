@@ -1,1 +1,2 @@
-export const TEST_DISPATCH = "TEST_DISPATCH";
+export const GET_EERORS = "GET_EERORS";
+export const SET_CURRENT_USER = "SET_CURRENT_USER";

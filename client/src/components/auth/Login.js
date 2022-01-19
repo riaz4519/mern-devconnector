@@ -1,4 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import classnames from "classnames";
+import { useSelector,useDispatch } from "react-redux";
+import { loginUser } from "../../actions/authActions";
+
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -7,23 +12,48 @@ const Login = () => {
   });
   const { email, password } = formData;
 
+  //define all states
+  const allStates = useSelector((state) => {
+    return {
+      auth: state.auth,
+      errors : state.errors
+    }
+  })
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [errors,setErrors] = useState({});
+
+  useEffect(() => {
+
+    setErrors(allStates.errors);
+
+    if(allStates.auth.isAuthenticated){
+
+      navigate('/dashboard');
+
+    }
+
+  },[allStates.errors,allStates.auth.isAuthenticated]);
+
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const onSubmit = (e) => {
     e.preventDefault();
 
-    console.log(formData);
+    dispatch(loginUser(formData));
+    
   };
 
   return (
     <section className="container">
-      <div className="alert alert-danger">Invalid credentials</div>
       <h1 className="large text-primary">Sign In</h1>
       <p className="lead">
         <i className="fas fa-user"></i> Sign into Your Account
       </p>
-      <form className="form" onSubmit={onSubmit}>
+      <form noValidate className="form" onSubmit={onSubmit}>
         <div className="form-group">
           <input
             type="email"
@@ -31,7 +61,9 @@ const Login = () => {
             value={email}
             onChange={onChange}
             name="email"
+            className={ classnames("form-control",{ "is-invalid": errors.email }) }
           />
+          { errors.email && <div className="invalid-feedback">{errors.email}</div> }
         </div>
         <div className="form-group">
           <input
@@ -40,12 +72,14 @@ const Login = () => {
             value={password}
             onChange={onChange}
             name="password"
+          className={ classnames("form-control",{ "is-invalid": errors.password }) }
           />
+          { errors.password && <div className="invalid-feedback">{errors.password}</div> }
         </div>
-        <input type="submit" className="btn btn-primary" value="Login" />
+        <input  type="submit" className="btn btn-primary" value="Login" />
       </form>
       <p className="my-1">
-        Don't have an account? <a href="register.html">Sign Up</a>
+        Don't have an account? <Link to="/register">Sign Up</Link>
       </p>
     </section>
   );

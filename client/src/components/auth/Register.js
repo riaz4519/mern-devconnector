@@ -1,8 +1,11 @@
-import { useState } from "react";
-import axios from "axios";
+import { useState ,useEffect} from "react";
+
 import classnames from "classnames";
-import {useSelector,useDispatch} from 'react-redux';
-import { registerUser } from "../../actions/authActions";
+import { useSelector } from "react-redux";
+import { registerUser  } from "../../actions/authActions";
+import { Link ,useNavigate} from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,26 +14,36 @@ const Register = () => {
     password: "",
     password2: "",
   });
+  
+  const [errors,setErrors] = useState({});
 
-  const [errors, setErrors] = useState({});
+  //const [errors, setErrors] = useState({});
 
   const { name, email, password, password2 } = formData;
 
-  const dispatch = useDispatch();
+  const allStates = useSelector((state) => {
+    return {
+      auth: state.auth,
+      errors : state.errors,
+    };
+  });
 
-  const onChange = (e) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() =>{
+
+    setErrors(allStates.errors);
+
+  },[allStates.errors])
+
+  const onChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const onSubmit = (e) => {
     e.preventDefault();
 
-
-    dispatch(registerUser(formData));
-
-    // axios
-    //   .post("/api/users/register", formData)
-    //   .then((res) => console.log(res.data))
-    //   .catch((err) => setErrors(err.response.data));
+    dispatch(registerUser(formData,navigate));
   };
 
   return (
@@ -51,7 +64,7 @@ const Register = () => {
               "is-invalid": errors.name,
             })}
           />
-          {errors.name && <div class="invalid-feedback">{errors.name}</div>}
+          {errors.name && <div className="invalid-feedback">{errors.name}</div>}
         </div>
         <div className="form-group">
           <input
@@ -60,11 +73,12 @@ const Register = () => {
             name="email"
             value={email}
             onChange={onChange}
-        className={classnames("form-control", {
-          "is-invalid": errors.email,
-        })}
+            className={classnames("form-control", {
+              "is-invalid": errors.email,
+            })}
           />
-        {errors.email && <div class="invalid-feedback">{errors.email}</div>}
+
+          {errors.email && <div className="invalid-feedback">{errors.email}</div>}
           <small className="form-text">
             This site uses Gravatar so if you want a profile image, use a
             Gravatar email
@@ -78,11 +92,13 @@ const Register = () => {
             minLength="6"
             value={password}
             onChange={onChange}
-        className={classnames("form-control", {
-          "is-invalid": errors.password,
-        })}
+            className={classnames("form-control", {
+              "is-invalid": errors.password,
+            })}
           />
-            {errors.password && <div class="invalid-feedback">{errors.password}</div>}
+          {errors.password && (
+            <div className="invalid-feedback">{errors.password}</div>
+          )}
         </div>
         <div className="form-group">
           <input
@@ -92,16 +108,18 @@ const Register = () => {
             minLength="6"
             value={password2}
             onChange={onChange}
-        className={classnames("form-control", {
-          "is-invalid": errors.password2,
-        })}
+            className={classnames("form-control", {
+              "is-invalid": errors.password2,
+            })}
           />
-            {errors.password2 && <div class="invalid-feedback">{errors.password2}</div>}
+          {errors.password2 && (
+            <div className="invalid-feedback">{errors.password2}</div>
+          )}
         </div>
         <input type="submit" className="btn btn-primary" value="Register" />
       </form>
       <p className="my-1">
-        Already have an account? <a href="login.html">Sign In</a>
+        Already have an account? <Link to="/login">Sign In</Link>
       </p>
     </section>
   );

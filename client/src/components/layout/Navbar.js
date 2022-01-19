@@ -1,6 +1,24 @@
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useState,useEffect } from "react";
 
 const Navbar = () => {
+
+  const [auth,setAuth] = useState({});
+
+  const allStates = useSelector((state) => {
+    return {
+      auth : state.auth
+    }
+  });
+
+  const {isAuthenticated,user} = auth;
+
+  useEffect(() =>{
+
+      setAuth(allStates.auth);
+
+  },[allStates])
     return (
 
              <nav className="navbar bg-dark">
