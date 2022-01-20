@@ -1,6 +1,4 @@
 import { useState ,useEffect} from "react";
-
-import classnames from "classnames";
 import { useSelector } from "react-redux";
 import { registerUser  } from "../../actions/authActions";
 import { Link ,useNavigate} from "react-router-dom";

@@ -2,6 +2,7 @@ import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import { GET_EERORS,SET_CURRENT_USER } from "./types";
 import jwt_decode from "jwt-decode";
+import { clearCurrentProfile } from "./profileActions";
 
 
 //register
@@ -71,7 +72,8 @@ export const logoutUser = (navigate) => (dispatch) =>{
     setAuthToken(false);
 
     //set current user to empty
-    dispatch(setCurrentUser({}));
+     dispatch(setCurrentUser({}));
+     dispatch(clearCurrentProfile());
 
     navigate('/login');
 

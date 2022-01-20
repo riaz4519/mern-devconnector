@@ -10,20 +10,15 @@ import { Provider } from "react-redux";
 import store from "./store";
 import jwt_decode from "jwt-decode";
 import { logoutUser, setCurrentUser } from "./actions/authActions";
-import {useEffect} from 'react';
+import { useEffect } from "react";
 import setAuthToken from "./utils/setAuthToken";
-
-
-
+import Dashboard from "./components/dashboard/dashboard";
+import { clearCurrentProfile } from "./actions/profileActions";
+import PrivateRoute from "./components/common/PrivateRoute";
 
 function App() {
-
-  
-
-  useEffect(() =>{
-
-    if(localStorage.jwtToken){
-
+  useEffect(() => {
+    if (localStorage.jwtToken) {
       setAuthToken(localStorage.jwtToken);
 
       const decoded = jwt_decode(localStorage.jwtToken);
@@ -32,19 +27,15 @@ function App() {
 
       const currentTime = Date.now() / 1000;
 
-      if(decoded.exp < currentTime){
-
+      if (decoded.exp < currentTime) {
         store.dispatch(logoutUser());
+        store.dispatch(clearCurrentProfile());
 
         //redirect to login page
         window.location.href = "/login";
-
       }
-
     }
-
-  },[])
-
+  }, []);
 
   return (
     <Provider store={store}>
@@ -57,6 +48,9 @@ function App() {
 
             <Route exact path="/register" element={<Register />} />
             <Route exact path="/login" element={<Login />} />
+            <Route element={<PrivateRoute />}>
+              <Route exact path="/dashboard" element={<Dashboard />} />
+            </Route>
           </Routes>
 
           <Footer />

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import {logoutUser} from "../../actions/authActions"
+import { logoutUser } from "../../actions/authActions";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -19,21 +19,24 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
 
-  const onLogoutClick = (e) =>{
+  const onLogoutClick = (e) => {
     e.preventDefault();
 
-    dispatch(logoutUser(navigate));
-
     
-
-  }
+     dispatch(logoutUser(navigate));
+  };
 
   const authLinks = (
     <ul>
-
       <li>
-        <img className="rounded-circle" style={ { width: '25px', marginRight: '5px'} } src={ isAuthenticated ? user.avatar :'' } />
-        <a href="#" onClick={onLogoutClick}>Logout</a>
+        <img
+          className="rounded-circle"
+          style={{ width: "25px", marginRight: "5px" }}
+          src={isAuthenticated ? user.avatar : ""}
+        />
+        <a href="#" onClick={onLogoutClick}>
+          Logout
+        </a>
       </li>
     </ul>
   );
@@ -51,10 +54,6 @@ const Navbar = () => {
       </li>
     </ul>
   );
-
-
-
-
 
   useEffect(() => {
     setAuth(allStates.auth);
